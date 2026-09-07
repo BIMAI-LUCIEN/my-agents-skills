@@ -4,10 +4,11 @@ Collection complète et portable de compétences (Skills) pour **Antigravity**, 
 
 ---
 
-## 📦 Liste des compétences incluses (17 skills)
+## 📦 Liste des compétences incluses (18 skills)
 
 ### 🎨 Médias, Vidéo & 3D
 * **`ai-video-ad-creator`** : Directeur artistique motion design pour spots vidéo publicitaires 30s/45s découpés en micro-plans de 10s pour Runway, Kling, Sora, Hailuo, Luma.
+* **`pinterest-flyer-downloader`** : Scraper, curateur et organisateur automatisé de flyers haute résolution depuis Pinterest (filtrage strict du contenu IA, catégorisation par domaine pro et numérotation).
 * **`remotion-best-practices`** : Création et programmation vidéo en React / Remotion (keyframes, animations, interpolations, audio, R3F).
 * **`threejs-3d-graphics`** : Programmation 3D WebGL, Three.js, shaders GLSL et optimisation des scènes 3D web.
 
