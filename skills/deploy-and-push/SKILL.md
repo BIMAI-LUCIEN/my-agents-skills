@@ -1,80 +1,85 @@
 ﻿---
 name: deploy-and-push
-description: Gestion complete et securisee des deploiements et des push Git. Verifie en profondeur les erreurs (build, typecheck, lint, secrets), applique les correctifs automatiquement et execute le push/deploiement sans echec. Use when user says "/deploy", "/deploy-and-push", "/push", asks to "deployer", "pusher le code", "preparer le deploiement", "verifier et pusher", or "fixer le build avant push".
-argument-hint: "[-check-only] [-prod] [-fix] [message_de_commit]"
+description: Gestion complete et securisee des deploiements et des push Git avec surveillance active des logs GitHub Actions et Vercel. Verifie le code en profondeur, auto-corrige les erreurs locales et distantes, et valide le deploiement reel. Use when user says "/deploy", "/deploy-and-push", "/push", asks to "deployer", "pusher le code", "verifier les logs vercel", "checker github actions", or "corriger le build de deploiement".
+argument-hint: "[-logs] [-vercel] [-gh] [-check-only] [message_de_commit]"
 metadata:
   category: devops-and-deployment
-  version: 1.0.0
+  version: 2.0.0
 ---
 
-# Skill: Deploy & Push (Vérification en Profondeur, Auto-Correction & Déploiement Sécurisé)
+# Skill: Deploy & Push (Pre-Flight, Surveillance Logs GitHub & Vercel, Auto-Correction)
 
 ## Rôle & Posture
-Tu es un **Release Manager et ingénieur DevOps senior**. Ton objectif absolu est de **garantir qu'aucun push ou déploiement ne casse la production ou le pipeline CI/CD**. 
+Tu es un **Release Manager et ingénieur DevOps senior**. Ton travail ne s'arrête pas une fois le code poussé sur Git : **tu surveilles activement les logs d'exécution sur GitHub Actions et Vercel** pour certifier que le déploiement réel en production est un succès total.
 
-Avant d'envoyer la moindre ligne de code sur Git ou en production, tu lances une **inspection approfondie (Pre-Flight Check)**, tu détectes les erreurs de build, de typage ou de lint, **tu les corriges toi-même en profondeur**, et une fois le feu 100% vert, tu génères un commit propre et effectues le push sécurisé.
+En cas d'échec (en local ou sur les serveurs distants), tu analyses les logs d'erreur, tu corriges le problème en profondeur, et tu re-pushes jusqu'à obtenir une URL de production fonctionnelle et des checks 100% verts.
 
 ---
 
 ## 🚀 Utilisation & Commandes
 
 ```bash
-/deploy-and-push              # Vérification complète, auto-correction et push
-/deploy "feat: nouveau flux"  # Push avec message de commit personnalisé
-/deploy -check-only           # Vérifie seulement le build et le typage sans pusher
-/deploy -prod                 # Déclenche également le build/déploiement de production
+/deploy-and-push              # Pipeline complet : check local + push + surveillance logs GitHub & Vercel
+/deploy "feat: nouvelle page" # Déploiement avec message de commit dédié
+/deploy -logs                 # Vérifie uniquement les derniers logs distants (GitHub Actions / Vercel)
+/deploy -check-only           # Vérifications locales préalables sans pusher
 ```
 
 ---
 
-## Les 4 Étapes du Pipeline "Zéro Échec"
+## Le Pipeline de Déploiement en 5 Étapes
 
-### Étape 1 : Pre-Flight Check en Profondeur (Les 4 Barrières)
-Avant d'envisager le moindre `git push`, exécute les 4 vérifications bloquantes :
-1. **Contrôle d'étanchéité des Secrets (`cybersec` & `environments-manager`) :**
-   - S'assurer qu'aucune clé API ou variable `.env` n'est présente dans les fichiers trackés par Git.
-   - Vérifier que `.env.example` est à jour pour que le serveur de prod dispose des variables nécessaires.
-2. **Typecheck Strict :**
-   - Exécuter `npx tsc --noEmit` (ou l'équivalent selon la stack).
-3. **Linter & Formattage :**
-   - Exécuter `npm run lint` pour éliminer les erreurs de syntaxe et imports inutilisés.
-4. **Build Local de Production :**
-   - Exécuter la commande réelle de production : `npm run build` (ou `pnpm build`).
-   - C'est le test ultime : si le build échoue en local, il échouera sur Vercel, Docker ou le serveur distant.
+### Étape 1 : Pre-Flight Check Local en Profondeur (Les 4 Barrières)
+Avant d'envoyer le code, valide mécaniquement en local :
+1. **Secrets & Environnement (`cybersec` & `environments-manager`) :** Aucun secret dans le code, `.env.example` complet.
+2. **Typecheck Strict :** `npx tsc --noEmit` (0 erreur tolérée).
+3. **Linter :** `npm run lint` propre.
+4. **Build Local Réel :** `npm run build` exécuté et réussi avec code `0`.
+*Si une erreur survient, applique le correctif immédiatement et relance avant de passer à l'étape 2.*
 
-### Étape 2 : Boucle d'Auto-Correction (Self-Healing Loop)
-Si une erreur survient à l'étape 1 (ex: erreur de type, import manquant, fonction non exportée) :
-- **Ne jamais abandonner ni pusher en force (`--force` ou `--no-verify` interdits).**
-- Analyser la cause racine de l'erreur dans la sortie du terminal.
-- Ouvrir le fichier défaillant et appliquer le correctif chirurgical.
-- Relancer immédiatement la vérification pour s'assurer de la résolution.
-- Réitérer jusqu'à ce que `tsc`, `lint` et `build` passent avec un code de sortie strictement égal à `0`.
+### Étape 2 : Commit Normalisé & Push Sécurisé
+- Vérifie `git status` et `git diff`.
+- Commit suivant la convention Conventional Commits (`feat:`, `fix:`, `chore:`).
+- `git push origin [branche_courante]`.
 
-### Étape 3 : Commit Normalisé & Push Sécurisé
-Une fois que tout est 100% vert :
-- Examiner `git status` et `git diff` pour vérifier que seuls les fichiers prévus sont modifiés.
-- Rédiger un message de commit clair au standard **Conventional Commits** :
-  - `feat: [description]` (nouvelle fonctionnalité)
-  - `fix: [description]` (correction de bug)
-  - `refactor: [description]` / `chore: [description]`
-- Exécuter :
-  ```bash
-  git add <fichiers>
-  git commit -m "[message explicite]"
-  git push origin [branche_courante]
-  ```
+### Étape 3 : Surveillance des Logs GitHub Actions (CI Checks)
+Dès que le push est envoyé :
+1. **Interrogation du statut CI :**
+   - Utilise `gh run list --limit 1` ou l'API GitHub pour récupérer le dernier workflow déclenché.
+   - Surveille le passage du statut : `queued` ➔ `in_progress` ➔ `completed`.
+2. **Inspection des Logs en cas d'échec :**
+   - Si le workflow échoue (`failure`), extraire les logs d'erreur précis via :
+     `gh run view --log-failed` (ou via l'API des runs GitHub).
+   - Isoler l'étape exacte qui a échoué (ex: tests en CI, step de build, dépendances système).
 
-### Étape 4 : Suivi de Déploiement & Synchronisation dans `contexte.md`
-- Si un outil de déploiement est connecté (Vercel CLI, Netlify, script de déploiement), vérifier le statut de livraison.
-- Mettre à jour `contexte.md` avec la section suivante :
+### Étape 4 : Surveillance des Logs & Déploiements Vercel
+1. **Détection du déploiement Vercel :**
+   - Interroger le statut du build Vercel (via la CLI Vercel `vercel inspect` / `vercel list`, ou via les commit statuses / checks GitHub associés au bot Vercel).
+2. **Lecture des Logs Vercel en direct :**
+   - Si le déploiement est en cours, attendre la finalisation.
+   - En cas d'erreur de build Vercel :
+     - Exécuter `vercel logs [deployment-url]` ou inspecter la sortie des checks Vercel.
+     - Détecter les causes typiques Vercel : variable d'environnement manquante dans le dashboard Vercel, dépassement de taille des Serverless Functions, incompatibilité de versions Node.
+3. **Extraction de l'URL finale :**
+   - Récupérer l'URL de production validée (ex: `https://[projet].vercel.app`).
+
+### Étape 5 : Boucle de Résolution Distante & Synchronisation dans `contexte.md`
+- **Si les logs GitHub ou Vercel révèlent une erreur :**
+  1. Analyser la cause racine (différence local vs environnement distant).
+  2. Appliquer la modification corrective dans le code source ou la configuration (`vercel.json`, variables requises).
+  3. Re-committer (`fix: resolve remote deployment error`) et re-pusher.
+  4. Ré-inspecter les logs jusqu'au succès complet.
+- **Une fois le déploiement confirmé :**
+  Mettre à jour `contexte.md` avec la section suivante :
 
 ```markdown
 ## 10. Historique des Déploiements & Releases
 
 ### Release : [Nom de la version / Commit]
 - **Date & Heure :** [Horodatage]
-- **Commit SHA :** [Hash court du commit]
-- **Vérifications préalables :** ✅ TypeScript OK, ✅ Lint OK, ✅ Build local OK, ✅ Zéro secret exposé.
-- **Statut Git :** Poussé avec succès vers `origin/[branche]`.
-- **Cible de Déploiement :** [ex: Vercel Production / Staging / Docker]
+- **Commit :** `[SHA court]` sur `origin/[branche]`
+- **Statut GitHub Actions :** 🟢 Tous les checks CI passés avec succès.
+- **Statut Vercel :** 🟢 Déploiement Ready sans erreur.
+- **URL de Production :** `https://[projet].vercel.app`
+- **Contrôle des Logs :** 0 erreur console au démarrage, endpoints de santé opérationnels.
 ```
