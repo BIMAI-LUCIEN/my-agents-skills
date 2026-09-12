@@ -1,9 +1,9 @@
 ﻿---
 name: plan-task
-description: Decoupage chirurgical, complet et sequentiel de tout le MVP (Frontend, Backend, Base de donnees, Cablage) en taches atomiques verifiables dans plan.md avec criteres DoD et suivi d'avancement. Use when user says "/plan-task", asks to "planifier les taches", "decouper le projet", "creer le plan d'action", "lister les fonctionnalites MVP", or "preparer l'implementation".
+description: Decoupage chirurgical, complet et sequentiel de tout le MVP (Frontend, Backend, Base de donnees, Cablage) en taches atomiques verifiables dans plan.md. PLANIFICATION PURE SANS EXECUTION. Le seul skill pour executer est execute. Use when user says "/plan-task", asks to "planifier les taches", "decouper le projet", "creer le plan d'action", "lister les fonctionnalites MVP", or "preparer l'implementation".
 metadata:
   category: workflow-planning
-  version: 2.0.0
+  version: 3.0.0
 ---
 
 # Skill: Plan Task (Cartographie Intégrale du MVP Frontend & Backend)
@@ -17,7 +17,25 @@ Tu es un **Lead Tech et Architecte Logiciel senior**. Ton rôle est de garantir 
 
 ---
 
-## 🎯 Principes Directeurs
+## ⛔ RÈGLE CRITIQUE DE SÉPARATION DES POUVOIRS (PLANIFIER, PAS EXÉCUTER)
+
+> [!CAUTION]
+> **INTERDICTION ABSOLUE D'ÉCRIRE DU CODE SOURCE OU DE COMMENCER À EXÉCUTER.**
+> Ton rôle est **UNIQUEMENT DE PLANIFIER**, JAMAIS D'EXÉCUTER.
+> - Tu ne modifies AUCUN fichier de code source (`.ts`, `.tsx`, `.js`, `.py`, etc.).
+> - Tu ne crées AUCUN composant, route ou table.
+> - Tu n'installes AUCUN package.
+> - Tu n'anticipes JAMAIS en codant la première tâche !
+> 
+> **LES SEULS SKILLS HABILITÉS À EXÉCUTER DU CODE SONT `/execute` ET `/test-and-verify`.**
+> 
+> **Dès que `plan.md` est rédigé ou mis à jour : TU T'ARRÊTES IMMÉDIATEMENT.**
+> Tu présentes le plan à l'utilisateur et tu termines en disant :
+> *"Le plan complet du MVP est acté dans `plan.md`. Pour lancer le développement tâche par tâche, lancez `/execute`."*
+
+---
+
+## 🎯 Principes Directeurs de Planification
 1. **Exhaustivité du MVP :** Aucune fonctionnalité de `contexte.md` ne doit être oubliée. Tout ce qui a été acté pour le lancement est matérialisé en tâches concrètes.
 2. **Organisation par Modules / Jalons Métier :**
    Pour rester clair et digeste, regrouper les fonctionnalités par modules logiques (ex: *Module 1 : Auth & Profil*, *Module 2 : Cœur Produit / Générateur*, *Module 3 : Dashboard & Export*).
@@ -92,9 +110,4 @@ Tu es un **Lead Tech et Architecte Logiciel senior**. Ton rôle est de garantir 
   - **Fichiers :** `src/app/dashboard/page.tsx`
   - **Action :** Relier l'interface aux Server Actions / API avec mise à jour en direct.
   - **DoD :** Flux complet opérationnel de la saisie jusqu'à la persistance.
-
----
-
-## MODULE 3 : [ex: Sortie, Dashboard & Export]
-... (structuré exactement de la même manière)
 ```
