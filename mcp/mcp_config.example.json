@@ -1,0 +1,61 @@
+{
+  "mcpServers": {
+    "n8n": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "n8n-mcp"
+      ],
+      "env": {
+        "N8N_API_KEY": "VOTRE_CLE_API_N8N",
+        "N8N_HOST": "https://n8n.blackcompany.site",
+        "N8N_URL": "https://n8n.blackcompany.site"
+      }
+    },
+    "github": {
+      "command": "node",
+      "args": [
+        "path/to/@modelcontextprotocol/server-github/dist/index.js"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "VOTRE_GITHUB_TOKEN"
+      }
+    },
+    "vercel": {
+      "command": "node",
+      "args": [
+        "path/to/vercel-mcp-pro/dist/index.js"
+      ],
+      "env": {
+        "VERCEL_TOKEN": "VOTRE_VERCEL_TOKEN",
+        "VERCEL_TEAM_ID": "VOTRE_VERCEL_TEAM_ID"
+      }
+    },
+    "expo": {
+      "command": "node",
+      "args": [
+        "path/to/local-expo-mcp/dist/cli.js"
+      ],
+      "env": {}
+    },
+    "notebooklm": {
+      "command": "node",
+      "args": [
+        "path/to/notebooklm-mcp/dist/index.js"
+      ],
+      "env": {
+        "NOTEBOOKLM_BROWSER_CHANNEL": "chromium"
+      }
+    },
+    "canva": {
+      "command": "node",
+      "args": [
+        "path/to/@elisbanpaco/mcp-canva-gemini-cli/dist/index.js"
+      ],
+      "env": {
+        "CANVA_CLIENT_ID": "VOTRE_CANVA_CLIENT_ID",
+        "CANVA_CLIENT_SECRET": "VOTRE_CANVA_CLIENT_SECRET"
+      }
+    }
+  }
+}
